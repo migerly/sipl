@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Віртуальне середовище
+.venv/
+venv/
+
+# Покриття тестами
+.coverage
+htmlcov/
+
+# Локальні результати команд із README
+/tree.json
+/tree.dot
+/tree.svg
+/derivation.json
