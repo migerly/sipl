@@ -1,0 +1,38 @@
+start: _BEGIN statement _END -> program
+?statement: simple_stmt (";" simple_stmt)+ -> sequence
+          | simple_stmt
+?simple_stmt: NAME ":=" expr -> assign
+            | _SKIP -> skip
+            | _BEGIN statement _END -> block
+            | _IF condition _THEN simple_stmt _ELSE simple_stmt -> if_stmt
+            | _WHILE condition _DO simple_stmt -> while_stmt
+?expr: expr "+" product -> add
+     | expr "-" product -> sub
+     | product
+?product: product "*" atom -> mul
+        | atom
+?atom: "-" UINT -> negative_number
+     | UINT -> number
+     | NAME -> variable
+     | "(" expr ")" -> grouped_expr
+?condition: condition OR negation -> disjunction
+          | negation
+?negation: NOT negation -> negate
+         | expr "=" expr -> equals
+         | expr ">" expr -> greater
+         | "(" condition ")" -> grouped_condition
+OR: "∨" | /or(?![A-Za-z_0-9])/
+NOT: "¬" | /not(?![A-Za-z_0-9])/
+NAME: /(?!begin\b|end\b|if\b|then\b|else\b|while\b|do\b|skip\b|or\b|not\b)[A-Za-z_][A-Za-z_0-9]*/
+UINT: /0|[1-9][0-9]*/
+%import common.WS
+%ignore WS
+
+_BEGIN: /begin(?![A-Za-z_0-9])/
+_END: /end(?![A-Za-z_0-9])/
+_SKIP: /skip(?![A-Za-z_0-9])/
+_IF: /if(?![A-Za-z_0-9])/
+_THEN: /then(?![A-Za-z_0-9])/
+_ELSE: /else(?![A-Za-z_0-9])/
+_WHILE: /while(?![A-Za-z_0-9])/
+_DO: /do(?![A-Za-z_0-9])/

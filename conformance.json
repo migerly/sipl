@@ -1,0 +1,15 @@
+{
+  "format_version": 1,
+  "cases": [
+    {"id":"assignment", "source":"begin x := 2; y := x + 3 end", "initial":{}, "expect":{"status":"ok","state":{"x":2,"y":5}}},
+    {"id":"precedence", "source":"begin x := 2 + 3 * 4 end", "initial":{}, "expect":{"status":"ok","state":{"x":14}, "ast":{"type":"Program","statement":{"type":"Assign","name":"x","expression":{"type":"Binary","operator":"+","left":{"type":"Number","value":2},"right":{"type":"Binary","operator":"*","left":{"type":"Number","value":3},"right":{"type":"Number","value":4}}}}}}},
+    {"id":"negative", "source":"begin x := -2; y := x * 3 end", "initial":{}, "expect":{"status":"ok","state":{"x":-2,"y":-6}}},
+    {"id":"while", "source":"begin z := 0; k := y; while k > 0 do begin z := z + x; k := k - 1 end end", "initial":{"x":2,"y":3}, "expect":{"status":"ok","state":{"x":2,"y":3,"z":6,"k":0}}},
+    {"id":"if-true", "source":"begin if x > 0 then y := 1 else y := 0 end", "initial":{"x":2}, "expect":{"status":"ok","state":{"x":2,"y":1}}},
+    {"id":"if-false", "source":"begin if x > 0 then y := 1 else y := 0 end", "initial":{"x":0}, "expect":{"status":"ok","state":{"x":0,"y":0}}},
+    {"id":"skip", "source":"begin skip end", "initial":{"x":7}, "expect":{"status":"ok","state":{"x":7}}},
+    {"id":"invalid-syntax", "source":"begin x := end", "initial":{}, "expect":{"status":"error","kind":"syntax"}},
+    {"id":"undefined-variable", "source":"begin x := y end", "initial":{}, "expect":{"status":"error","kind":"runtime"}},
+    {"id":"infinite-loop", "source":"begin while 1 > 0 do skip end", "initial":{}, "max_steps":10, "expect":{"status":"error","kind":"runtime","message_contains":"ліміт"}}
+  ]
+}
